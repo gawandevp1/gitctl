@@ -13,36 +13,22 @@ import (
 	"github.com/gawandevp1/gitctl/utils"
 )
 
-// GitFunctions
-// type GitFunctions interface {
-// 	FetchGitPRSummary() (summary map[string]int, err error)
-// 	MailToAdmin(summary map[string]int) (err error)
-// }
-
-type gitRunner struct {
+type gitCtl struct {
 	Input models.Input
 }
 
-type summaryData struct {
-	OpenPR   int
-	ClosedPR int
-	TotalPR  int
-}
-
-func GetNewGR(input models.Input) (gr *gitRunner) {
-	return &gitRunner{
+func GetNewGR(input models.Input) (gr *gitCtl) {
+	return &gitCtl{
 		Input: input,
 	}
 }
 
-// FetchGitData() to get data from git repo
-func (gr *gitRunner) FetchGitPRSummary() (summary map[string]int, err error) {
-	//code to get data from github
+// get PR history like, closed merged open total PR.
+// FetchPRHistory ....
+func (gr *gitCtl) FetchPRHistory() (summary map[string]int, err error) {
 	next := true
 	page := 1
 	summary = make(map[string]int)
-	// find what was the day, 1 week back so we can get the PRs only after that day
-	//need to get data for all PRs updated within last week to check if they are still open or closed or merged
 	previousDays := time.Now().AddDate(0, 0, -1*gr.Input.PrevDays)
 	for next {
 		gitUrl := gr.Input.Url + "/pulls?state=all&&sort=updated&&direction=desc&&page=" + strconv.Itoa(page)
@@ -76,22 +62,19 @@ func (gr *gitRunner) FetchGitPRSummary() (summary map[string]int, err error) {
 	return
 }
 
-// MailToAdmin() to send mail to admin
-func (gr *gitRunner) MailToAdmin(summaryData map[string]int) (err error) {
-	//code to send data to admin
-	//as stated in assgnment this is the content of mail to be sent.
-	repoName := strings.Split(gr.Input.Url, "/")[4:]
-	fmt.Println("------------------------------------------------------------------------")
-	fmt.Println("To: " + gr.Input.RecieverID)
-	fmt.Println("From: " + gr.Input.SenderID)
-	fmt.Println("Subject: Summary Report of last weeks github PRs for repo ", strings.Join(repoName, "/"))
-	fmt.Println(" The summary table is as follows   ")
-	fmt.Println("--------------------------------------")
-	fmt.Println("|   State of PR    |       Count      |")
-	fmt.Println("--------------------------------------")
-	for key, val := range summaryData {
-		fmt.Println("| " + key + "    |       " + strconv.Itoa(val) + "         |")
+// EmailNotification ....
+func (pr *gitCtl) EmailNotification(prData map[string]int) (err error) {
+	// printing the content of email.
+	repoName := strings.Split(pr.Input.Url, "/")[4:]
+	fmt.Println("To: " + pr.Input.RecieverID)
+	fmt.Println("From: " + pr.Input.SenderID)
+	fmt.Println("<<<<<<------- Here is the PR Data fro gitctl------->>>>>>")
+	fmt.Println("Subject: [DoNotReply] PR Report of last weeks github PRs for repo ", strings.Join(repoName, "/"))
+	fmt.Println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+	fmt.Println("<<<<<   State of PR    ::      Count      >>>>>")
+	fmt.Println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+	for key, val := range prData {
+		fmt.Println("<<<<" + key + "    ->       " + strconv.Itoa(val) + ">>>>")
 	}
-	fmt.Println("------------------------------------------------------------------------")
 	return nil
 }

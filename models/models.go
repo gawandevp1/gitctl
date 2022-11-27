@@ -151,3 +151,8 @@ type Input struct {
 	SenderID   string `json:"sendermail"`
 	RecieverID string `json:"recievermail"`
 }
+
+// GitCtl ...
+type GitCtl struct {
+	Input Input
+}

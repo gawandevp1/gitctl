@@ -14,15 +14,15 @@ const (
 )
 
 func main() {
-	fmt.Println("git Runner started")
-	if err := Runner(); err != nil {
+	fmt.Println("Get PR data from github repo.....")
+	if err := GatherData(); err != nil {
 		log.Panic(err.Error())
 	}
 
 }
 
-func Runner() (err error) {
-	//read data from config
+func GatherData() (err error) {
+	//get data from Input file
 	var input models.Input
 	input, err = utils.GetConfigValues(filePath)
 	if err != nil {
@@ -31,11 +31,12 @@ func Runner() (err error) {
 	}
 	githandler := controller.GetNewGR(input)
 
-	summary, err := githandler.FetchGitPRSummary()
+	summary, err := githandler.FetchPRHistory()
 	if err != nil {
 		log.Println(err.Error())
 		return
 	}
-	//send mail to server
-	return githandler.MailToAdmin(summary)
+	//print data to send mail to server.
+	//This only print the data to send in mail.
+	return githandler.EmailNotification(summary)
 }
