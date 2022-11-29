@@ -147,9 +147,9 @@ type Organization struct {
 // Input ...
 type Input struct {
 	Url        string `json:"url"`
-	PrevDays   int    `json:"prevdays"`
-	SenderID   string `json:"sendermail"`
-	RecieverID string `json:"recievermail"`
+	PrevDays   int    `json:"prevDays"`
+	SenderID   string `json:"sendermailID"`
+	RecieverID string `json:"recievermailID"`
 }
 
 // GitCtl ...

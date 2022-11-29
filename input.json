@@ -1,7 +1,6 @@
 {
     "url":"https://api.github.com/repos/novuhq/novu",
-    "prevdays":7,
-    "sendermail":"sender@gmail.com",
-    "recievermail":"admin_devops@gmail.com"
+    "prevDays":7,
+    "senderMailID":"gitctl@gmail.com",
+    "recieverMailID":"admin_devops@gmail.com"
 }
-

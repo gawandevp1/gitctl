@@ -20,11 +20,14 @@ func GetConfigValues(filepath string) (input models.Input, err error) {
 		log.Println(err.Error())
 		return
 	}
+	// closing the file
+	defer file.Close()
 	err = json.NewDecoder(file).Decode(&input)
 	if err != nil {
 		log.Println(err.Error())
 		return
 	}
+	
 	return
 }
 

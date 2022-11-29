@@ -15,28 +15,33 @@ const (
 
 func main() {
 	fmt.Println("Get PR data from github repo.....")
-	if err := GatherData(); err != nil {
+	if err := gatherData(); err != nil {
 		log.Panic(err.Error())
 	}
 
 }
 
-func GatherData() (err error) {
-	//get data from Input file
+// gatherData.. 
+func gatherData() (err error) {
+	// get data from Input file
 	var input models.Input
 	input, err = utils.GetConfigValues(filePath)
 	if err != nil {
 		log.Println(err.Error())
 		return
 	}
-	githandler := controller.GetNewGR(input)
+	gitHandler := controller.GetNewGR(input)
 
-	summary, err := githandler.FetchPRHistory()
+	summary, err := gitHandler.FetchPRHistory()
 	if err != nil {
 		log.Println(err.Error())
 		return
 	}
-	//print data to send mail to server.
-	//This only print the data to send in mail.
-	return githandler.EmailNotification(summary)
+
+	// Reason to add this comment: Sending email notification, we can make this async.
+	// go gitHandler.EmailNotification(summary)
+
+	// print content of email.
+	// This only print the data to send in mail.
+	return gitHandler.EmailNotification(summary)
 }
